@@ -1,18 +1,9 @@
-from OpenGL.GLUT import *
-import sys
-
-def display():
-    glutSwapBuffers()
+from window import *
 
 
 def main():
-    glutInit(sys.argv)
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
-    glutInitWindowSize(800, 600)
-    glutCreateWindow("BlockyGame")
-    glutDisplayFunc(display)
-    glutMainLoop()
-
+    w = Window("Blocky Game", 800, 600)
+    w.run()
 
 if __name__ == "__main__":
     main()
