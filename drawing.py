@@ -29,7 +29,7 @@ class DrawingOperation:
             self.__shader.setUniform(uniform.getLocation(), uniform.getValue())
         for vboBinding in self.__vboBindings:
             vboBinding.bindData()
-        glDrawElements(GL_TRIANGLES, self.__ibo.getLength() if length is None else length, GL_UNSIGNED_INT, 0)
+        glDrawElements(GL_TRIANGLES, self.__ibo.getLength() if length is None else length, GL_UNSIGNED_INT, None)
 
     def drawInstanced(self, instances, length=None):
         self.__shader.use()

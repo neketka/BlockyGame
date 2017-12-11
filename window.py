@@ -13,9 +13,9 @@ class Window:
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
         glutInitWindowSize(w, h)
         self.window = glutCreateWindow(title.encode('utf-8'))
-        glutIdleFunc(self.__logic)
+        glutIdleFunc(self.__tick)
+        glutDisplayFunc(self.__display)
         glutCloseFunc(self.__destroy)
-        glutDisplayFunc(self.__render)
         glutReshapeFunc(self.__resize)
         self.shader = Shader(ShaderStage(ShaderStageType.VertexShader, "./shaders/test.vert"),
                              ShaderStage(ShaderStageType.FragmentShader, "./shaders/test.frag"))
@@ -28,18 +28,18 @@ class Window:
 
         self.ibo = VBO(np.array([
             0, 1, 2
-        ]))
+        ], np.uint32), True)
 
         self.drawing = DrawingOperation(self.shader, [],
             [self.vbo.createBinding([AttribBinding(False, self.shader.getAttribLocation("pos"), 4, 3)])], self.ibo)
 
-    def __logic(self):
-        pass
-
-    def __render(self):
+    def __tick(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         self.drawing.draw()
         glutSwapBuffers()
+
+    def __display(self):
+        pass
 
     def __resize(self, w, h):
         pass
