@@ -14,6 +14,7 @@ class ShaderStage:
             file = f.read()
             glShaderSource(self.__id, file.encode("utf-8"))
             glCompileShader(self.__id)
+        print(self.getInfoLog())
 
     def getInfoLog(self):
         return glGetShaderInfoLog(self.__id)

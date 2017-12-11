@@ -1,22 +1,19 @@
-from OpenGL.GLUT import *
+import pygame
 from vbo import *
 from shader import *
 from drawing import *
 import numpy as np
 import glmath
-import sys
 
 
 class Window:
     def __init__(self, title, w, h):
-        glutInit(sys.argv)
-        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
-        glutInitWindowSize(w, h)
-        self.window = glutCreateWindow(title.encode('utf-8'))
-        glutIdleFunc(self.__tick)
-        glutDisplayFunc(self.__display)
-        glutCloseFunc(self.__destroy)
-        glutReshapeFunc(self.__resize)
+        pygame.init()
+        pygame.display.set_mode((800, 600), pygame.DOUBLEBUF | pygame.OPENGL)
+        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MAJOR_VERSION, 3)
+        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MINOR_VERSION, 3)
+        pygame.display.set_caption(title)
+
         self.shader = Shader(ShaderStage(ShaderStageType.VertexShader, "./shaders/test.vert"),
                              ShaderStage(ShaderStageType.FragmentShader, "./shaders/test.frag"))
 
@@ -33,13 +30,13 @@ class Window:
         self.drawing = DrawingOperation(self.shader, [],
             [self.vbo.createBinding([AttribBinding(False, self.shader.getAttribLocation("pos"), 4, 3)])], self.ibo)
 
-    def __tick(self):
+    def __logic(self):
+        pass
+
+    def __render(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         self.drawing.draw()
-        glutSwapBuffers()
-
-    def __display(self):
-        pass
+        pygame.display.flip()
 
     def __resize(self, w, h):
         pass
@@ -50,4 +47,11 @@ class Window:
         self.ibo.delete()
 
     def run(self):
-        glutMainLoop()
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+            self.__logic()
+            self.__render()
+        self.__destroy()
