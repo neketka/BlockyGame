@@ -24,7 +24,7 @@ class Window:
             [-1, -1, 1],
             [0, 1, 1],
             [1, -1, 1]
-        ], np.float32), )
+        ], np.float32))
 
         self.ibo = VBO(np.array([
             0, 1, 2
