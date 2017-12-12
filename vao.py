@@ -15,3 +15,6 @@ class VAO:
 
     def bind(self):
         glBindVertexArray(self.__id)
+
+    def delete(self):
+        glDeleteVertexArrays(1, [self.__id])

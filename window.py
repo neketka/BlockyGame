@@ -53,6 +53,7 @@ class Window:
         self.shader.delete()
         self.vbo.delete()
         self.ibo.delete()
+        self.vao.delete()
         SDL_GL_DeleteContext(self.__context)
         SDL_DestroyWindow(self.__window)
 
