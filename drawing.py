@@ -17,25 +17,22 @@ class Uniform:
 
 
 class DrawingOperation:
-    def __init__(self, shader, uniforms, vboBindings, ibo):
+    def __init__(self, shader, uniforms, vao):
         self.__shader = shader
-        self.__vboBindings = vboBindings
-        self.__ibo = ibo
+        self.__vao = vao
         self.__uniforms = uniforms
 
     def draw(self, length=None):
         self.__shader.use()
         for uniform in self.__uniforms:
             self.__shader.setUniform(uniform.getLocation(), uniform.getValue())
-        for vboBinding in self.__vboBindings:
-            vboBinding.bindData()
-        glDrawElements(GL_TRIANGLES, self.__ibo.getLength() if length is None else length, GL_UNSIGNED_INT, None)
+        self.__vao.bind()
+        glDrawElements(GL_TRIANGLES, self.__vao.getLength() if length is None else length, GL_UNSIGNED_INT, None)
 
     def drawInstanced(self, instances, length=None):
         self.__shader.use()
         for uniform in self.__uniforms:
             self.__shader.setUniform(uniform.getLocation(), uniform.getValue())
-        for vboBinding in self.__vboBindings:
-            vboBinding.bindData()
-        glDrawElementsInstanced(GL_TRIANGLES, self.__ibo.getLength() if length is None else length,
+        self.__vao.bind()
+        glDrawElementsInstanced(GL_TRIANGLES, self.__vao.getLength() if length is None else length,
                                 GL_UNSIGNED_INT, 0, instances)

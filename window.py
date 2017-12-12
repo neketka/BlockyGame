@@ -1,18 +1,24 @@
-import pygame
 from vbo import *
+from vao import *
 from shader import *
 from drawing import *
+from sdl2 import *
+from sdl2.video import *
+import ctypes
 import numpy as np
 import glmath
 
 
 class Window:
     def __init__(self, title, w, h):
-        pygame.init()
-        pygame.display.set_mode((800, 600), pygame.DOUBLEBUF | pygame.OPENGL)
-        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MAJOR_VERSION, 3)
-        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MINOR_VERSION, 3)
-        pygame.display.set_caption(title)
+        SDL_Init(SDL_INIT_VIDEO)
+        self.__window = SDL_CreateWindow(title.encode("utf-8"), 100, 100, 800, 600,
+                                       SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE)
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE)
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3)
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3)
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1)
+        self.__context = SDL_GL_CreateContext(self.__window)
 
         self.shader = Shader(ShaderStage(ShaderStageType.VertexShader, "./shaders/test.vert"),
                              ShaderStage(ShaderStageType.FragmentShader, "./shaders/test.frag"))
@@ -27,8 +33,10 @@ class Window:
             0, 1, 2
         ], np.uint32), True)
 
-        self.drawing = DrawingOperation(self.shader, [],
-            [self.vbo.createBinding([AttribBinding(False, self.shader.getAttribLocation("pos"), 4, 3)])], self.ibo)
+        self.vao = VAO([self.vbo.createBinding([AttribBinding(False, self.shader.getAttribLocation("pos"), 4, 3)])],
+                       self.ibo)
+
+        self.drawing = DrawingOperation(self.shader, [], self.vao)
 
     def __logic(self):
         pass
@@ -36,7 +44,7 @@ class Window:
     def __render(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         self.drawing.draw()
-        pygame.display.flip()
+        SDL_GL_SwapWindow(self.__window)
 
     def __resize(self, w, h):
         pass
@@ -45,12 +53,16 @@ class Window:
         self.shader.delete()
         self.vbo.delete()
         self.ibo.delete()
+        SDL_GL_DeleteContext(self.__context)
+        SDL_DestroyWindow(self.__window)
 
     def run(self):
+        SDL_ShowWindow(self.__window)
         running = True
         while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+            event = SDL_Event()
+            while SDL_PollEvent(ctypes.byref(event)) != 0:
+                if event.type == SDL_QUIT:
                     running = False
             self.__logic()
             self.__render()

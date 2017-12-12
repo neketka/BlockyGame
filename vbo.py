@@ -1,5 +1,6 @@
 from OpenGL.GL import *
 import numpy as np
+import ctypes
 
 
 class AttribBinding:
@@ -34,8 +35,9 @@ class VBOBinding:
     def bindData(self):
         offset = 0
         for x in self.__bindings:
+            glBindBuffer(GL_ARRAY_BUFFER, self.__vboId)
             glVertexAttribPointer(x.getLocation(), x.getLength(), GL_INT if x.isFloat() else GL_FLOAT,
-                                  GL_FALSE, self.__size, offset)
+                                  GL_FALSE, self.__size - x.getSize(), ctypes.c_void_p(offset))
             if self.__divisor is not None:
                 glVertexAttribDivisor(x.getLocation(), self.__divisor)
             glEnableVertexAttribArray(x.getLocation())

@@ -55,9 +55,9 @@ def rotationZ(theta):
 
 def perspective(fovy, aspect, zNear, zFar):
     top = zNear * math.tan(0.5 * fovy)
-    bottom = -yMax
-    left = yMin * aspect
-    right = yMax * aspect
+    bottom = -top
+    left = bottom * aspect
+    right = top * aspect
     x = (2.0 * zNear) / (right - left)
     y = (2.0 * zFar) / (top - bottom)
     a = (right + left) / (right - left)
