@@ -13,7 +13,7 @@ class Window:
     def __init__(self, title, w, h):
         SDL_Init(SDL_INIT_VIDEO)
         self.__window = SDL_CreateWindow(title.encode("utf-8"), 100, 100, 800, 600,
-                                       SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE)
+                                         SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE)
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE)
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3)
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3)

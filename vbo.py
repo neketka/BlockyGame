@@ -45,16 +45,27 @@ class VBOBinding:
 
 
 class VBO:
-    def __init__(self, data: np.ndarray, index=False, dynamic=False):
+    def __init__(self, data, index=False, dynamic=False):
         arr = data.flatten()
         self.__id = glGenBuffers(1)
         self.__target = GL_ELEMENT_ARRAY_BUFFER if index else GL_ARRAY_BUFFER
+        self.__dynamicity = GL_DYNAMIC_DRAW if dynamic else GL_STATIC_DRAW
         self.__length = len(arr)
         self.bind()
-        glBufferData(self.__target, arr, GL_DYNAMIC_DRAW if dynamic else GL_STATIC_DRAW)
+        glBufferData(self.__target, arr, self.__dynamicity)
 
     def bind(self):
         glBindBuffer(self.__target, self.__id)
+
+    def realloc(self, data):
+        arr = data.flatten()
+        self.bind()
+        glBufferData(self.__target, arr, self.__dynamicity)
+
+    def modify(self, data, index):
+        arr = data.flatten()
+        self.bind()
+        glBufferSubData(self.__target, index * arr.itemsize, arr, arr.nbytes)
 
     def createBinding(self, bindings):
         return VBOBinding(self.__id, bindings)
