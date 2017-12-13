@@ -4,6 +4,7 @@ from shader import *
 from drawing import *
 from sdl2 import *
 from sdl2.video import *
+from OpenGL.GL import *
 import ctypes
 import numpy as np
 import glmath
@@ -16,10 +17,9 @@ class Window:
                                          SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE)
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE)
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3)
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3)
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2)
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1)
         self.__context = SDL_GL_CreateContext(self.__window)
-
         self.shader = Shader(ShaderStage(ShaderStageType.VertexShader, "./shaders/test.vert"),
                              ShaderStage(ShaderStageType.FragmentShader, "./shaders/test.frag"))
 
@@ -42,7 +42,7 @@ class Window:
         self.drawing = DrawingOperation(self.shader, [self.rotation], self.vao)
 
     def __logic(self):
-        self.dir += 0.1
+        self.dir += 0.001
         self.rotation.setValue(np.matmul(glmath.translate(0, 0, 2), glmath.rotationY(self.dir)))
 
     def __render(self):
