@@ -2,6 +2,15 @@ import numpy as np
 import math
 
 
+def identity():
+    return np.array([
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+    ], np.float32)
+
+
 def translate(x, y, z):
     return np.array([
         [1, 0, 0, x],

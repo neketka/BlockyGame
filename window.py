@@ -31,15 +31,19 @@ class Window:
 
         self.ibo = VBO(np.array([
             0, 1, 2
-        ], np.uint32), True)
+        ], np.int32), True)
 
         self.vao = VAO([self.vbo.createBinding([AttribBinding(False, self.shader.getAttribLocation("pos"), 4, 3)])],
                        self.ibo)
 
-        self.drawing = DrawingOperation(self.shader, [], self.vao)
+        self.rotation = Uniform(self.shader.getUniformLocation("model"))
+        self.dir = 0
+
+        self.drawing = DrawingOperation(self.shader, [self.rotation], self.vao)
 
     def __logic(self):
-        pass
+        self.dir += 0.1
+        self.rotation.setValue(np.matmul(glmath.translate(0, 0, 2), glmath.rotationY(self.dir)))
 
     def __render(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -65,6 +69,9 @@ class Window:
             while SDL_PollEvent(ctypes.byref(event)) != 0:
                 if event.type == SDL_QUIT:
                     running = False
+                elif event.type == SDL_WINDOWEVENT:
+                    if event.window.event == SDL_WINDOWEVENT_RESIZED:
+                        self.__resize(event.window.data1, event.window.data2)
             self.__logic()
             self.__render()
         self.__destroy()
