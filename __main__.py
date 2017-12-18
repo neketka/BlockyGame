@@ -1,11 +1,8 @@
-from window import *
+from blocky import *
 
-
-def main():
-    w = Window("Blocky Game", 800, 600)
-    w.run()
-
+GameInstance = None
 
 if __name__ == "__main__":
-    main()
+    GameInstance = BlockyGame()
+    GameInstance.start()
 

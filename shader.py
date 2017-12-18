@@ -1,4 +1,5 @@
 from OpenGL.GL import *
+from texture import *
 import numpy
 
 
@@ -63,6 +64,8 @@ class Shader:
             elif length == 4:
                 glUniform4fv(location, value)
             elif length == 9:
-                glUniformMatrix3fv(location, 1, False, value)
+                glUniformMatrix3fv(location, 1, True, value)
             elif length == 16:
-                glUniformMatrix4fv(location, 1, False, value)
+                glUniformMatrix4fv(location, 1, True, value)
+        elif isinstance(value, Texture2D) or isinstance(value, TextureCubemap):
+            glUniform1i(location, value.bind())

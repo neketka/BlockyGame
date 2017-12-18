@@ -2,7 +2,10 @@
 
 out vec4 fragment;
 
+in vec2 texcoord;
+uniform sampler2D tex;
+
 void main()
 {
-	fragment = vec4(1.0, 0.0, 0.0, 1.0);
+	fragment = texture(tex, texcoord);
 }

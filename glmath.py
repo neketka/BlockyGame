@@ -63,21 +63,12 @@ def rotationZ(theta):
 
 
 def perspective(fovy, aspect, zNear, zFar):
-    top = zNear * math.tan(0.5 * fovy)
-    bottom = -top
-    left = bottom * aspect
-    right = top * aspect
-    x = (2.0 * zNear) / (right - left)
-    y = (2.0 * zFar) / (top - bottom)
-    a = (right + left) / (right - left)
-    b = (top + bottom) / (top - bottom)
-    c = -(zFar + zNear) / (zFar - zNear)
-    d = -(2.0 * zFar * zNear) / (zFar - zNear)
+    f = 1 / math.tan(0.5 * fovy)
     return np.array([
-        [x, 0, 0, 0],
-        [0, y, 0, 0],
-        [a, b, c, -1],
-        [0, 0, d, 0]
+        [f / aspect, 0, 0, 0],
+        [0, f, 0, 0],
+        [0, 0, (zFar + zNear)/(zNear-zFar), (2*zFar*zNear)/(zNear-zFar)],
+        [0, 0, -1, 0]
     ], np.float32)
 
 
